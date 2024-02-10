@@ -1,6 +1,7 @@
 .wrapper {
   width: 100%;
   min-height: 100vh;
+  box-sizing: border-box;
 
   .updated_at {
     display: flex;
@@ -9,8 +10,16 @@
     padding: 20px 40px;
     gap: 10px;
     font-size: 0.9rem;
+    @media (max-width: 600px) {
+      padding: 20px 20px;
+      justify-content: center;
+    }
   }
   .chart {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     .row {
       display: flex;
       justify-content: flex-start;
@@ -26,12 +35,23 @@
         align-items: center;
         font-weight: bold;
         font-size: 1.5rem;
+        @media (max-width: 600px) {
+          width: 100%;
+          justify-content: center;
+        }
       }
       .artist {
         width: 30%;
+        @media (max-width: 600px) {
+          width: 100%;
+        }
       }
       .song {
         width: 30%;
+        @media (max-width: 600px) {
+          width: 100%;
+          font-weight: bold;
+        }
       }
       .rank {
         display: flex;
@@ -42,11 +62,30 @@
         height: 35px;
         padding: 8px;
         border-radius: 5px;
+        @media (max-width: 600px) {
+          width: 100%;
+          transform: scale(0.7);
+        }
       }
 
       @media (max-width: 1300px) {
         width: 100%;
       }
+      @media (max-width: 600px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0px;
+        margin: 0px;
+        gap: 1px;
+        border: 1px solid #202020;
+        margin: 20px 15px;
+        border-radius: 24px;
+      }
+    }
+    @media (max-width: 600px) {
+      margin: 0px 20px;
     }
   }
 }

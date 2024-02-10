@@ -16,8 +16,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        <h1>Webchart</h1>
+      <div className={styles.home}>
+        <h1 className={styles.page_title}>Webchart</h1>
         <Wrapper />
       </div>
     </>
