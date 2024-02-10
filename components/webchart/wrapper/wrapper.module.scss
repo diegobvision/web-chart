@@ -1,0 +1,52 @@
+.wrapper {
+  width: 100%;
+  min-height: 100vh;
+
+  .updated_at {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px 40px;
+    gap: 10px;
+    font-size: 0.9rem;
+  }
+  .chart {
+    .row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 10px 40px;
+      gap: 10px;
+      font-size: 1.3rem;
+      width: 60%;
+      .position {
+        width: 5%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      .artist {
+        width: 30%;
+      }
+      .song {
+        width: 30%;
+      }
+      .rank {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 30%;
+        background-color: rgb(150, 220, 204);
+        height: 35px;
+        padding: 8px;
+        border-radius: 5px;
+      }
+
+      @media (max-width: 1300px) {
+        width: 100%;
+      }
+    }
+  }
+}
