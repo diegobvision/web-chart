@@ -2,14 +2,35 @@
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
+  position: relative;
+  .tooltip {
+    position: absolute;
+    right: 20px;
+    float: right;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: rgb(150, 220, 204);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
 
   .updated_at {
+    position: absolute;
+    right: 60px;
+    top: -8px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    padding: 20px 40px;
+    padding: 0px 40px;
     gap: 10px;
     font-size: 0.9rem;
+    background-color: #fff;
+    border: 0.5px solid rgb(150, 220, 204);
+    animation: slideLeft 0.5s ease-in backwards;
+    border-radius: 25px;
     @media (max-width: 600px) {
       padding: 20px 20px;
       justify-content: center;
@@ -20,6 +41,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 48px;
     .row {
       display: flex;
       justify-content: flex-start;
@@ -28,6 +50,7 @@
       gap: 10px;
       font-size: 1.3rem;
       width: 60%;
+      animation: slideup 0.5s ease-in backwards;
       .position {
         width: 5%;
         display: flex;
@@ -77,15 +100,36 @@
         align-items: center;
         text-align: center;
         padding: 0px;
-        margin: 0px;
         gap: 1px;
         border: 1px solid #202020;
-        margin: 20px 15px;
+        margin: 36px 15px;
         border-radius: 24px;
       }
     }
     @media (max-width: 600px) {
       margin: 0px 20px;
     }
+  }
+}
+
+@keyframes slideup {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
