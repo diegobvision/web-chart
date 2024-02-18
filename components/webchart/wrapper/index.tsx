@@ -1,5 +1,7 @@
 import style from "./wrapper.module.scss";
 import React, { useEffect, useState } from "react";
+import useScrollBlock from "@/lib/useScrollBlock";
+import Image from "next/image";
 
 type IChartType = {
   artist: string;
@@ -42,11 +44,113 @@ const InfoIcon = () => {
   );
 };
 
+const CloseIcon = () => {
+  return (
+    <svg
+      width="800px"
+      height="800px"
+      viewBox="-0.5 0 25 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3 21.32L21 3.32001"
+        stroke="#000000"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M3 3.32001L21 21.32"
+        stroke="#000000"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+type ModalProps = {
+  artist: string;
+  song: string;
+  rank: number;
+  closeModal: () => void;
+};
+
+const Modal = ({ artist, song, rank, closeModal }: ModalProps) => {
+  const [followers, setFollowers] = useState(0);
+  const [genres, setGenres] = useState([]);
+  const [thumbnail, setThumbnail] = useState("");
+  const [wiki, setWiki] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `/api/artist_info?artist=${titleCase(artist).replace(" ", "_")}`
+      );
+      const json = await res.json();
+      console.log(json);
+      setFollowers(json.followers);
+      setGenres(json.genres);
+      setThumbnail(json.thumbnail);
+      setWiki(json.wiki);
+    };
+    fetchData();
+  }, [artist]);
+  // console.log(followers, genres, thumbnail, wiki);
+  return (
+    <div className={style.modalBackground}>
+      <div className={style.modalBox}>
+        <div className={style.modalThumbnail}>
+          <Image src={thumbnail} alt={artist} fill />
+        </div>
+        <button className={style.closeBtn} onClick={closeModal}>
+          <CloseIcon />
+        </button>
+        <div className={style.modalHeader}>
+          <h4>{titleCase(artist)}</h4>
+          <p>{titleCase(song)}</p>
+        </div>
+        <div className={style.modalContent}>
+          <p>{wiki}</p>
+        </div>
+        <p>
+          Followers: <b>{followers}</b>
+        </p>
+      </div>
+    </div>
+  );
+};
+
 const Wrapper = () => {
   const [data, setData] = useState<IChartType[]>([]);
   const [updatedAt, setUpdatedAt] = useState("");
   const [loading, setLoading] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [currentArtist, setCurrentArtist] = useState("");
+  const [currentSong, setCurrentSong] = useState("");
+  const [currentRank, setCurrentRank] = useState(0);
+
+  const [blockScroll, allowScroll] = useScrollBlock();
+
+  const openModal = (artist: string, song: string, rank: number) => {
+    blockScroll();
+    setCurrentArtist(artist);
+    setCurrentSong(song);
+    setCurrentRank(rank);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    allowScroll();
+    setShowModal(false);
+    setCurrentArtist("");
+    setCurrentSong("");
+    setCurrentRank(0);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,11 +170,34 @@ const Wrapper = () => {
     }, 5000);
   };
 
+  //trigger close modal on clicking outside of modal
+  useEffect(() => {
+    const closeOnOutsideClick = (e: MouseEvent) => {
+      if (e.target === document.querySelector(`.${style.modalBackground}`)) {
+        closeModal();
+      }
+    };
+    if (showModal) {
+      document.addEventListener("click", closeOnOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("click", closeOnOutsideClick);
+    };
+  }, [showModal]);
+
   if (loading) {
     return <div className={style.wrapper}>Loading...</div>;
   }
   return (
     <div className={style.wrapper}>
+      {showModal && (
+        <Modal
+          artist={currentArtist}
+          song={currentSong}
+          rank={currentRank}
+          closeModal={closeModal}
+        />
+      )}
       <div className={style.tooltip} onClick={openTooltip}>
         <InfoIcon />
       </div>
@@ -95,6 +222,7 @@ const Wrapper = () => {
             key={i}
             className={style.row}
             style={{ animationDelay: `${i / 5}s` }}
+            onClick={() => openModal(d.artist, d.song, d.rank)}
           >
             <div className={style.position}>{i + 1}</div>
             <div className={style.artist}>{titleCase(d.artist)}</div>
